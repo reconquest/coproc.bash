@@ -1,0 +1,6 @@
+[submodule "vendor/github.com/reconquest/import.bash"]
+	path = vendor/github.com/reconquest/import.bash
+	url = https://github.com/reconquest/import.bash
+[submodule "vendor/github.com/reconquest/test-runner.bash"]
+	path = vendor/github.com/reconquest/test-runner.bash
+	url = https://github.com/reconquest/test-runner.bash

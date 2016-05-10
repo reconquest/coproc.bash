@@ -1,0 +1,1 @@
+tests:involve coproc.bash

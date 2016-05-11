@@ -1,4 +1,4 @@
-coproc:run echo_proc touch 123
+coproc:run-immediately echo_proc touch 123
 
 coproc:wait "$echo_proc"
 

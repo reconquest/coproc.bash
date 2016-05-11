@@ -1,8 +1,8 @@
 while true; do
     echo -n >procs.output
 
-    coproc:run proc_a 'echo a >> procs.output'
-    coproc:run proc_b 'echo b >> procs.output'
+    coproc:run-immediately proc_a 'echo a >> procs.output'
+    coproc:run-immediately proc_b 'echo b >> procs.output'
 
     coproc:wait "$proc_b" &
     coproc:wait "$proc_a" &

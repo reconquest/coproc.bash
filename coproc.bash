@@ -33,9 +33,9 @@ coproc:get-pid() {
     local self=$1
     local _pid_var=$2
 
-    local pid=$(cat $self/pid)
+    local _pid=$(cat $self/pid)
 
-    eval $_pid_var=\$pid
+    eval $_pid_var=\$_pid
 }
 
 # @description Waits specified coprocess to finish.
@@ -198,6 +198,8 @@ coproc:get-killed-code() {
 }
 
 _coproc_job() {
+    local self="$1"
+
     _coproc_eval "${@}" \
         <$self/stdin.pipe \
         >$self/stdout.pipe \
@@ -212,11 +214,10 @@ _coproc_eval() {
     local self=$1
     shift
 
-    trap 'coproc:get-killed-code >$self/done' ERR
+    trap "coproc:get-killed-code >$self/done" ERR
 
     local exit_code
 
-    # Run in subshell to avoid bash loops in the top PID.
     if builtin eval "${@}"; then
         exit_code=0
     else
@@ -236,13 +237,13 @@ _coproc_kill_children() {
     local children=(${@})
     local kill_output
 
-    if kill_output=$($kill_command "${children[@]}" 2>&1); then
-        _coproc_kill_watchdog "${children[@]}" &
-
-        wait $!
-    else
+    if kill_output="$(command $kill_command "${children[@]}" 2>&1)"; then
         if grep -qF "not permitted" <<< "$kill_output"; then
             _coproc_kill_children "sudo kill" "${children[@]}"
+        else
+            _coproc_kill_watchdog "${children[@]}" &
+
+            wait $!
         fi
     fi
 }
@@ -254,7 +255,7 @@ _coproc_kill_watchdog() {
     local children=${@}
 
     sleep 0.1
-    $kill_command -9 "${children[@]}" &>/dev/null || true
+    command $kill_command -9 "${children[@]}" &>/dev/null || true
 }
 
 _coproc_get_job_child_pids() {

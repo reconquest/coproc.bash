@@ -2,7 +2,6 @@ Go-routines in bash.
 
 ![demo.gif](https://cloud.githubusercontent.com/assets/674812/15157631/4f665222-170e-11e6-8c26-ee71d6e30c5f.gif)
 
-
 # Importing
 
 ## Using [import.bash](https://github.com/reconquest/import.bash)
@@ -10,6 +9,10 @@ Go-routines in bash.
 ```bash
 import github.com/reconquest/coproc
 ```
+
+# Reference
+
+See reference at [REFERENCE.md](REFERENCE.md).
 
 # Usage
 

@@ -4,3 +4,6 @@
 [submodule "vendor/github.com/reconquest/test-runner.bash"]
 	path = vendor/github.com/reconquest/test-runner.bash
 	url = https://github.com/reconquest/test-runner.bash
+[submodule "vendor/github.com/reconquest/shdoc"]
+	path = vendor/github.com/reconquest/shdoc
+	url = github.com:reconquest/shdoc

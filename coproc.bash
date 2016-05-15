@@ -61,7 +61,6 @@ coproc:wait() {
     local pid
     coproc:get-pid "$self" pid
 
-
     exec {stdin}<>$self/stdin.pipe
     exec {stdout}<>$self/stdout.pipe
     exec {stderr}<>$self/stderr.pipe
@@ -74,7 +73,7 @@ coproc:wait() {
     exec {stdout}<&-
     exec {stderr}<&-
 
-    return $(cat "$self/done")
+    return $(cat "$self/done" || coproc:get-killed-code)
 }
 
 # @description Gets stdout FD linked to stdout of running coprocess.
@@ -164,11 +163,21 @@ coproc:stop() {
         main_pid=$(cat $self/pid)
     done
 
-    while pstree -lp "$main_pid" | grep -oqP '\(\d+\)'; do
+    while _coproc_is_task_exists "$main_pid"; do
+        if ! _coproc_is_task_suspended "$main_pid"; then
+            _coproc_kill "kill -STOP" "$pid"
+            continue
+        fi
+
         for pid in $(_coproc_get_job_child_pids "$main_pid"); do
             _coproc_kill "pkill -P" "$pid"
             _coproc_kill "kill" "$pid"
         done
+
+        _coproc_kill "kill -CONT" "$main_pid"
+
+        _coproc_kill "pkill -P" "$main_pid"
+        _coproc_kill "kill" "$main_pid"
     done
 
     _coproc_kill_watchdog "$wait_pid" &
@@ -208,6 +217,7 @@ _coproc_eval() {
         exit_code=$?
     fi
 
+    exec 0<&-
     exec 1<&-
     exec 2<&-
 
@@ -234,6 +244,14 @@ _coproc_kill_watchdog() {
 
     sleep 0.5
     command $kill_command "$pid" -9 &>/dev/null || true
+}
+
+_coproc_is_task_exists() {
+    ps -p "$1" >/dev/null 2>&1
+}
+
+_coproc_is_task_suspended() {
+    [ "$(ps -o s= -p "$1")" = "T" ]
 }
 
 _coproc_get_job_child_pids() {

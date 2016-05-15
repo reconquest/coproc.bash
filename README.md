@@ -1,3 +1,5 @@
+# coproc.bash ![travis](https://travis-ci.org/reconquest/coproc.bash.svg?branch=master)
+
 Go-routines in bash.
 
 ![demo.gif](https://cloud.githubusercontent.com/assets/674812/15157631/4f665222-170e-11e6-8c26-ee71d6e30c5f.gif)

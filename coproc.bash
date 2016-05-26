@@ -40,12 +40,12 @@ coproc:run-immediately() {
 # @arg $1 id Coprocesss ID.
 # @arg $2 var Variable name to store PID.
 coproc:get-pid() {
-    local self=$1
-    local _pid_var=$2
+    local _coproc_self=$1
+    local _coproc_pid_var=$2
 
-    local _pid=$(cat $self/pid)
+    local _coproc_pid=$(cat $_coproc_self/pid)
 
-    eval $_pid_var=\$_pid
+    eval $_coproc_pid_var=\$_coproc_pid
 }
 
 # @description Waits specified coprocess to finish.
@@ -72,8 +72,6 @@ coproc:wait() {
     exec {stdin}<&-
     exec {stdout}<&-
     exec {stderr}<&-
-
-    return $(cat "$self/done" || coproc:get-killed-code)
 }
 
 # @description Gets stdout FD linked to stdout of running coprocess.
@@ -194,34 +192,16 @@ coproc:get-killed-code() {
 
 _coproc_job() {
     local self="$1"
+    shift
 
-    _coproc_eval "${@}" \
+    "${@}" \
         <$self/stdin.pipe \
         >$self/stdout.pipe \
         2>$self/stderr.pipe &
 
     printf "$!" >$self/pid
-}
 
-_coproc_eval() {
-    local self=$1
-    shift
-
-    trap "coproc:get-killed-code >$self/done" ERR
-
-    local exit_code
-
-    if builtin eval "${@}"; then
-        exit_code=0
-    else
-        exit_code=$?
-    fi
-
-    exec 0<&-
-    exec 1<&-
-    exec 2<&-
-
-    printf "$exit_code" >$self/done
+    disown
 }
 
 _coproc_kill() {

@@ -1,4 +1,4 @@
-coproc:run-immediately echo_proc echo 1 '1>&2'
+coproc:run-immediately echo_proc eval echo 1 '1>&2'
 
 tests:eval coproc:get-stderr-only "$echo_proc"
 tests:assert-stdout 1

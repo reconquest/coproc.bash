@@ -144,6 +144,19 @@ coproc:close-fd() {
     eval "exec {$1}<&-"
 }
 
+
+# @description Set type of linux process signal that will be used for stopping
+# coprocess. By default it will be SIGTERM. See also: coproc:stop()
+#
+# @arg $1 id Coprocess ID.
+# @arg $2 signal Signal
+coproc:set-signal-stop() {
+    local self=$1
+    local signal=$2
+
+    echo $signal > $self/signal-stop
+}
+
 # @description Stops specified coprocess with SIGTERM. If coprocess is still
 # alive after 0.1 second, kill it with SIGKILL. If coprocess requires root
 # privileges, kill it with sudo.
@@ -161,6 +174,11 @@ coproc:stop() {
         main_pid=$(cat $self/pid)
     done
 
+    local signal="SIGTERM"
+    if [[ -f $self/signal-stop ]]; then
+        signal=$(cat $self/signal-stop)
+    fi
+
     while _coproc_is_task_exists "$main_pid"; do
         if ! _coproc_is_task_suspended "$main_pid"; then
             _coproc_kill "kill -STOP" "$main_pid"
@@ -168,14 +186,14 @@ coproc:stop() {
         fi
 
         for pid in $(_coproc_get_job_child_pids "$main_pid"); do
-            _coproc_kill "pkill -P" "$pid"
-            _coproc_kill "kill" "$pid"
+            _coproc_kill "pkill -P -$signal" "$pid"
+            _coproc_kill "kill -$signal" "$pid"
         done
 
         _coproc_kill "kill -CONT" "$main_pid"
 
-        _coproc_kill "pkill -P" "$main_pid"
-        _coproc_kill "kill" "$main_pid"
+        _coproc_kill "pkill -P -$signal" "$main_pid"
+        _coproc_kill "kill -$signal" "$main_pid"
     done
 
     _coproc_kill_watchdog "$wait_pid" &

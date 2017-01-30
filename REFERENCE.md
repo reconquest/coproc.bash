@@ -7,6 +7,7 @@
 * [coproc:get-stdout-only()](#coprocgetstdoutonly)
 * [coproc:get-stderr-only()](#coprocgetstderronly)
 * [coproc:close-fd()](#coprocclosefd)
+* [coproc:set-signal-stop()](#coprocsetsignalstop)
 * [coproc:stop()](#coprocstop)
 * [coproc:get-killed-code()](#coprocgetkilledcode)
 
@@ -107,6 +108,16 @@ Descriptor must be closed to prevent leaking.
 ### Arguments
 
 * **$1** (fd): FD to close.
+
+## coproc:set-signal-stop()
+
+Set type of linux process signal that will be used for stopping
+coprocess. By default it will be SIGTERM. See also: coproc:stop()
+
+### Arguments
+
+* **$1** (id): Coprocess ID.
+* **$2** (signal): Signal
 
 ## coproc:stop()
 

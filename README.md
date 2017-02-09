@@ -9,7 +9,7 @@ Go-routines in bash.
 ## Using [import.bash](https://github.com/reconquest/import.bash)
 
 ```bash
-import github.com/reconquest/coproc
+import:use github.com/reconquest/coproc
 ```
 
 # Reference

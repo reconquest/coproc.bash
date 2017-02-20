@@ -258,7 +258,8 @@ _coproc_get_job_child_pids() {
     pstree -lp "$main_pid" \
         | grep -oP '\(\d+\)' \
         | grep -oP '\d+' \
-        | tail -n+2
+        | tail -n+2 \
+        | tac
 }
 
 _coproc_duplicate_pipe_to_fd() {

@@ -1,16 +1,14 @@
-
 * [coproc:run()](#coprocrun)
-* [coproc:get-pid()](#coprocgetpid)
+* [coproc:get-pid()](#coprocget-pid)
 * [coproc:wait()](#coprocwait)
-* [coproc:get-stdout-fd()](#coprocgetstdoutfd)
-* [coproc:get-stderr-fd()](#coprocgetstderrfd)
-* [coproc:get-stdout-only()](#coprocgetstdoutonly)
-* [coproc:get-stderr-only()](#coprocgetstderronly)
-* [coproc:close-fd()](#coprocclosefd)
-* [coproc:set-signal-stop()](#coprocsetsignalstop)
+* [coproc:get-stdout-fd()](#coprocget-stdout-fd)
+* [coproc:get-stderr-fd()](#coprocget-stderr-fd)
+* [coproc:get-stdout-only()](#coprocget-stdout-only)
+* [coproc:get-stderr-only()](#coprocget-stderr-only)
+* [coproc:close-fd()](#coprocclose-fd)
+* [coproc:set-signal-stop()](#coprocset-signal-stop)
 * [coproc:stop()](#coprocstop)
-* [coproc:get-killed-code()](#coprocgetkilledcode)
-
+* [coproc:get-killed-code()](#coprocget-killed-code)
 
 ## coproc:run()
 
@@ -19,14 +17,14 @@ Schedules specified job to execution.
 **NOTE**: job will not execute until stdout and stderr output descriptors
 will be opened for reading.
 
-#### Example
+### Example
 
 ```bash
 coproc:run echo_proc echo 1
 coproc:get-stdout-only "$echo_proc"  # will output 1
 ```
 
-#### Example
+### Example
 
 ```bash
 coproc:run echo_proc echo 2
